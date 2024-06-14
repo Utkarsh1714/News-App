@@ -2,13 +2,18 @@ import { useState, useEffect } from "react";
 import { SpeedInsights } from "@vercel/speed-insights/react"
 
 function App() {
-  const [news, setnews] = useState([]);
+  const [news, setNews] = useState([]);
 
   useEffect(() => {
     const fetchNews = async () => {
       let x = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ftechcrunch.com%2Ffeed%2F");
       let data = await x.json();
-      setnews(data.items)
+      // Strip HTML tags from the description
+      const cleanedData = data.items.map(item => ({
+        ...item,
+        description: item.description.replace(/<\/?[^>]+(>|$)/g, "")
+      }));
+      setNews(cleanedData);
     }
 
     fetchNews();
