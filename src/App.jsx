@@ -7,9 +7,7 @@ function App() {
   useEffect(() => {
     const fetchNews = async () => {
       let x = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ftechcrunch.com%2Ffeed%2F");
-      console.log(x)
       let data = await x.json();
-      console.log(data)
       setnews(data.items)
     }
 
