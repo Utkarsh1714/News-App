@@ -1,20 +1,26 @@
 import { useState, useEffect } from "react";
-import { SpeedInsights } from "@vercel/speed-insights/react"
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function App() {
   const [news, setNews] = useState([]);
 
   useEffect(() => {
     const fetchNews = async () => {
-      let x = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ftechcrunch.com%2Ffeed%2F");
-      let data = await x.json();
-      // Strip HTML tags from the description
-      const cleanedData = data.items.map(item => ({
-        ...item,
-        description: item.description.replace(/<\/?[^>]+(>|$)/g, "")
-      }));
-      setNews(cleanedData);
-    }
+      try {
+        let x = await fetch(
+          "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ftechcrunch.com%2Ffeed%2F"
+        );
+        let data = await x.json();
+        // Strip HTML tags from the description
+        const cleanedData = data.items.map((item) => ({
+          ...item,
+          description: item.description.replace(/<\/?[^>]+(>|$)/g, ""),
+        }));
+        setNews(cleanedData);
+      } catch (error) {
+        console.log("Error fetching news :", error);
+      }
+    };
 
     fetchNews();
   }, []);
@@ -40,7 +46,14 @@ function App() {
                       {item.description}
                     </p>
                     <div className=" text-right -mt-5 underline italic mb-5">
-                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="hover:text-blue-700">Read more</a>
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-blue-700"
+                      >
+                        Read more
+                      </a>
                     </div>
                   </li>
                 ))}
@@ -54,9 +67,6 @@ function App() {
 }
 
 export default App;
-
-
-
 
 // import { useState, useEffect } from "react";
 // import { SpeedInsights } from "@vercel/speed-insights/react";
